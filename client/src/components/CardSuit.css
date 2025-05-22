@@ -1,0 +1,17 @@
+.card-suit {
+  font-family: 'Arial', sans-serif;
+  font-weight: bold;
+  display: inline-block;
+}
+
+.card-suit.small {
+  font-size: 1rem;
+}
+
+.card-suit.medium {
+  font-size: 2rem;
+}
+
+.card-suit.large {
+  font-size: 3rem;
+} 
