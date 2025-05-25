@@ -1,0 +1,22 @@
+.card-container {
+    height: 8rem;
+    width: 5.7rem;
+    background-color: white;
+    position: relative;
+}
+
+.rank {
+    position: absolute;
+    top: 0.5rem;
+    left: 0.5rem;
+    font-size: 1.2rem;
+    transform: translateY(-25%);
+}
+
+.suit {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 2.2rem;
+}
