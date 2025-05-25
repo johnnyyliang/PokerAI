@@ -2,9 +2,13 @@
     background-color: #000;
     display : flex;
     flex-direction: column;
-    align-items: flex-start;
+    align-items: center;
     padding: 1rem;
     min-height: 100vh;
+}
+
+.text {
+    color: #fff;
 }
 
 .header-row {
@@ -22,5 +26,26 @@
 
 .title {
     color: #fff;
+    margin: 1rem;
+}
+
+.ai-cards {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.turned-over {
+    height: 8rem;
+    width: 5.7rem;
+    margin: 1rem;
+}
+
+.option-container {
+    display: flex;
+    align-items: center;
+}
+
+.option {
     margin: 1rem;
 }
