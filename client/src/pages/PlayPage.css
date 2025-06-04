@@ -44,6 +44,7 @@
 .option-container {
     display: flex;
     align-items: center;
+    gap: 1rem;
 }
 
 .option {
@@ -52,4 +53,20 @@
 
 .stack {
     margin: 0.5rem
+}
+
+.hand-history-sidebar {
+    position: absolute;
+    top: 50%;
+    left: 105%; /* just to the right of community cards */
+    transform: translateY(-50%);
+    width: 260px;
+    height: 20rem;
+    background: #222;
+    color: #fff;
+    border-radius: 0.5rem;
+    padding: 1rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    overflow-y: auto;
+    z-index: 2;
 }
