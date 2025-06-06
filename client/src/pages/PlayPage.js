@@ -179,7 +179,7 @@ function PlayPage() {
             dealer: dealer === "Player" ? 0 : 1,
             stage: ["Preflop", "Flop", "Turn", "River", "Showdown"].indexOf(stage),
             pot: pot,
-            to_call: betSize, // or actual to_call value
+            to_call: betInRound ? betSize : 0, // actual amount to call: 0 if no bet in round
             checked: false, // TODO: fill with actual checked state if available
             history: handHistory.join(";"),
             terminal: false,

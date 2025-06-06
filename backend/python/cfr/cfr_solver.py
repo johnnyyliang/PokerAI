@@ -101,8 +101,7 @@ class CFRTrainer:
     def _available_actions(self, state: GameState) -> Tuple[int, ...]:
         if state.to_call > 0:
             return (0, 1)  # fold, call
-        # When to_call == 0, only check and raise are legal
-        return (1, 2)  # check, raise
+        return (1, 2)      # check, raise
 
     # ----- game tree transitions ------------------------------------------
     def _next_round(self, state: GameState) -> None:
