@@ -23,4 +23,7 @@ Thumbs.db
 .idea/
 
 # Misc
-*.local 
+*.local
+
+# Ignore Python cache directories
+__pycache__/ 
