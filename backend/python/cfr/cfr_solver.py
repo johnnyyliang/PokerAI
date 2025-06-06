@@ -19,7 +19,7 @@ import random
 import json
 from dataclasses import dataclass
 from typing import Dict, List, Tuple
-from .utils import RANKS, SUITS, NUM_CARDS, card_to_str, hand_to_str, _check_straight, evaluate_hand
+from utils import RANKS, SUITS, NUM_CARDS, card_to_str, hand_to_str, _check_straight, evaluate_hand
 
 # ---------------------------------------------------------------------------
 # Game state

@@ -33,12 +33,13 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    gap: 1rem;
 }
 
 .turned-over {
     height: 8rem;
     width: 5.7rem;
-    margin: 1rem;
+    margin: 0;
 }
 
 .option-container {
@@ -69,4 +70,22 @@
     box-shadow: 0 2px 8px rgba(0,0,0,0.2);
     overflow-y: auto;
     z-index: 2;
+}
+
+/* Add flex layout for player's cards */
+.self-cards {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    margin: 1rem 0;
+}
+
+/* Add flex layout for community cards */
+.community-cards {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    position: relative;
 }
