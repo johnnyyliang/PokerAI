@@ -101,7 +101,8 @@ class CFRTrainer:
     def _available_actions(self, state: GameState) -> Tuple[int, ...]:
         if state.to_call > 0:
             return (0, 1)  # fold, call
-        return (1, 2)      # check, raise
+        # When to_call == 0, only check and raise are legal
+        return (1, 2)  # check, raise
 
     # ----- game tree transitions ------------------------------------------
     def _next_round(self, state: GameState) -> None:
@@ -232,8 +233,10 @@ class CFRTrainer:
         node = self.nodes.get(info_key)
         if node is not None:
             avg_strategy = node.get_average_strategy()
-            # Pick the action with the highest probability
-            best_action = max(avg_strategy, key=avg_strategy.get)
+            # Restrict the strategy to legal actions only
+            legal_strategy = {a: avg_strategy.get(a, 0.0) for a in actions}
+            # Pick the legal action with the highest probability
+            best_action = max(legal_strategy, key=legal_strategy.get)
             return best_action
         # If no node exists for this info set, pick a random legal action
         return random.choice(actions)

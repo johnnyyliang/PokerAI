@@ -35,6 +35,8 @@ function PlayPage() {
     const [playerHoleCards, setPlayerHoleCards] = useState([]);
     const [aiHoleCards, setAiHoleCards] = useState([]);
     const [communityCards, setCommunityCards] = useState([]);
+    // Add state to track if a bet has occurred this round
+    const [betInRound, setBetInRound] = useState(false);
 
     // AI response when user makes a move
     useEffect(() => {
@@ -55,13 +57,13 @@ function PlayPage() {
     useEffect(() => {
         if (actionComplete) {
             if (stage === "Preflop") {
-                setCommunityCards(deck => [deck[0], deck[1], deck[2]]);
+                setCommunityCards([deck[0], deck[1], deck[2]]);
                 setStage("Flop");
             } else if (stage === "Flop") {
-                setCommunityCards(deck => [...deck.slice(0, 3), deck[3]]);
+                setCommunityCards([...communityCards, deck[3]]);
                 setStage("Turn");
             } else if (stage === "Turn") {
-                setCommunityCards(deck => [...deck.slice(0, 4), deck[4]]);
+                setCommunityCards([...communityCards, deck[4]]);
                 setStage("River");
             } else if (stage === "River") {
                 setStage("Showdown");
@@ -105,11 +107,13 @@ function PlayPage() {
                 setSelfStack(selfStack - betSize)
                 setPot(pot + betSize)
                 setHandHistory(prev => [...prev, `Player bets $${betSize}`])
+                setBetInRound(true)
                 setTurn("AI")
             } else {
                 setAiStack(aiStack - betSize)
                 setPot(pot + betSize)
                 setHandHistory(prev => [...prev, `AI bets $${betSize}`])
+                setBetInRound(true)
                 setTurn("Player")
             }
             toggleDisplay()
@@ -118,15 +122,31 @@ function PlayPage() {
 
     function handleCall() {
         if (turn === "Player") {
-            setSelfStack(selfStack - betSize)
-            setPot(pot + betSize)
-            setHandHistory(prev => [...prev, "Player calls"])
-            setTurn("AI")
+            if (!betInRound) {
+                // No outstanding bet, treat as a check
+                setHandHistory(prev => [...prev, "Player checks"])
+                setTurn("AI")
+            } else {
+                setSelfStack(prev => prev - betSize)
+                setPot(prev => prev + betSize)
+                setHandHistory(prev => [...prev, "Player calls"])
+                setBetInRound(false)
+                setActionComplete(true)
+                setTurn("Player")
+            }
         } else {
-            setAiStack(aiStack - betSize)
-            setPot(pot + betSize)
-            setHandHistory(prev => [...prev, "AI calls"])
-            setTurn("Player")
+            if (!betInRound) {
+                setHandHistory(prev => [...prev, "AI checks"])
+                setActionComplete(true)
+                setTurn("Player")
+            } else {
+                setAiStack(prev => prev - betSize)
+                setPot(prev => prev + betSize)
+                setHandHistory(prev => [...prev, "AI calls"])
+                setBetInRound(false)
+                setActionComplete(true)
+                setTurn("Player")
+            }
         }
     }
 
@@ -195,16 +215,20 @@ function PlayPage() {
                     setAiStack(prev => prev - amount);
                     setPot(prev => prev + amount);
                     setHandHistory(prev => [...prev, `AI bets $${amount}`]);
+                    setBetInRound(true);
                     setTurn("Player");
                     break;
                 case 'call':
                     setAiStack(prev => prev - amount);
                     setPot(prev => prev + amount);
                     setHandHistory(prev => [...prev, "AI calls"]);
+                    setBetInRound(false);
+                    setActionComplete(true);
                     setTurn("Player");
                     break;
                 case 'check':
                     setHandHistory(prev => [...prev, "AI checks"]);
+                    setActionComplete(true);
                     setTurn("Player");
                     break;
                 case 'fold':
@@ -259,6 +283,25 @@ function PlayPage() {
         }
     });
 
+    // Placeholder hand evaluator
+    function evaluateWinner(playerCards, aiCards, community) {
+        // TODO: Replace with real hand evaluator or backend call
+        // For now, randomly pick a winner for demonstration
+        const r = Math.random();
+        if (r < 0.5) return "Player";
+        else return "AI";
+    }
+
+    // Add effect to determine winner at showdown
+    useEffect(() => {
+        if (stage === "Showdown" && winner === null) {
+            const result = evaluateWinner(playerHoleCards, aiHoleCards, communityCards);
+            setWinner(result);
+        }
+        // If someone folded, winner is already set
+        // eslint-disable-next-line
+    }, [stage, winner]);
+
     return (
         <div className='play-page' style={{position: 'relative'}}>
             <div className="header-row">
@@ -284,12 +327,14 @@ function PlayPage() {
             </div>
             <h1 className = "text"> Pot: ${ pot }</h1>
             <div className = "community-cards" style={{position: 'relative'}}>
-                <img src = { cardTurnedOver } alt = "Card Turned Over" className = "turned-over"></img>
-                <img src = { cardTurnedOver } alt = "Card Turned Over" className = "turned-over"></img>
-                <img src = { cardTurnedOver } alt = "Card Turned Over" className = "turned-over"></img>
-                <img src = { cardTurnedOver } alt = "Card Turned Over" className = "turned-over"></img>
-                <img src = { cardTurnedOver } alt = "Card Turned Over" className = "turned-over"></img>
-                {/* Sidebar for hand history */}
+                {[0,1,2,3,4].map((_, idx) => {
+                    if (idx < communityCards.length) {
+                        const { rank, suit } = getCardInfo(communityCards[idx]);
+                        return <Card key={idx} rank={rank} suit={suit} />;
+                    } else {
+                        return <img key={idx} src={cardTurnedOver} alt="Card Turned Over" className="turned-over" />;
+                    }
+                })}
                 <div className="hand-history-sidebar">
                     <h3>Hand History</h3>
                     <ul>
@@ -328,6 +373,12 @@ function PlayPage() {
             <div className = "text stack">
                 <h1>Stack: ${ selfStack } </h1>
             </div>
+            {winner && (
+                <div className="winner-modal" style={{position: 'absolute', top: 100, left: '50%', transform: 'translateX(-50%)', background: 'white', padding: 24, borderRadius: 8, zIndex: 10, textAlign: 'center'}}>
+                    <h2>{winner} wins the hand!</h2>
+                    <Button variant="contained" color="primary" onClick={initializeHand}>Next Hand</Button>
+                </div>
+            )}
         </div>
     );
 }
