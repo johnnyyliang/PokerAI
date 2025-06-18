@@ -24,3 +24,6 @@ Thumbs.db
 
 # Misc
 *.local 
+
+#dataset
+dataset/
