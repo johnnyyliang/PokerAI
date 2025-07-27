@@ -1,6 +1,25 @@
 {
   "dependencies": {
     "@tailwindcss/vite": "^4.1.7",
+    "express": "^5.1.0",
     "tailwindcss": "^4.1.7"
-  }
+  },
+  "name": "pokerai",
+  "version": "1.0.0",
+  "description": "This is a web application designed to allow users to improve their poker skills by playing heads-up NLHE against a Counterfactual Regret Poker AI",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/johnnyyliang/PokerAI.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/johnnyyliang/PokerAI/issues"
+  },
+  "homepage": "https://github.com/johnnyyliang/PokerAI#readme"
 }
